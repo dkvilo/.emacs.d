@@ -1,8 +1,8 @@
 (eval-and-compile
   (customize-set-variable
    'package-archives '(("org" . "https://orgmode.org/elpa/")
-		       ("melpa" . "https://melpa.org/packages/")
-		       ("gnu" . "https://elpa.gnu.org/packages/")))
+     ("melpa" . "https://melpa.org/packages/")
+     ("gnu" . "https://elpa.gnu.org/packages/")))
   (package-initialize)
   (unless (package-installed-p 'use-package)
     (package-refresh-contents)
@@ -43,11 +43,6 @@
 (require 'direx)
 (global-set-key (kbd "C-x C-j") 'direx:jump-to-directory)
 
-;; IDO CONFIGURATION
-; (setq ido-enable-flex-matching t)
-; (setq ido-everywhere t)
-; (ido-mode 1)
-
 ;; VISUAL FILL MODE CONFIGURATION
 (require 'visual-fill-column)
 (add-hook 'org-mode-hook 'auto-fill-mode)
@@ -78,23 +73,24 @@
 (global-auto-revert-mode t)
 (defun turn-off-eldoc () (eldoc-mode -1))
 (add-hook 'eval-expression-minibuffer-setup-hook #'turn-off-eldoc)
-;; set default tab char's display width to 4 spaces
-(setq-default tab-width 4) ; emacs 23.1 to 26 default to 8
-;; set current buffer's tab char's display width to 4 spaces
-(setq tab-width 4)
+;; set default tab char's display width to 2 spaces
+(setq-default tab-width 2) ; emacs 23.1 to 26 default to 8
+;; set current buffer's tab char's display width to 2 spaces
+(setq tab-width 2)
 (set-frame-font "Hermit")
+(global-eldoc-mode -1)
 
 ;; DELETE TRAILIN WHITESPACES
 (add-hook 'before-save-hook '(lambda()
   (when (not (or (derived-mode-p 'markdown-mode)))
-  (delete-trailing-whitespace))))
+    (delete-trailing-whitespace))))
 
 ;; Save cursor positions
 (setq save-place-file "~/.emacs.d/saveplace")
 (if (version<= emacs-version "25.1")
-    (progn
-      (setq-default save-place t)
-      (require 'saveplace))
+  (progn
+    (setq-default save-place t)
+    (require 'saveplace))
   (save-place-mode 1))
 
 ;; Safeguard, so this only runs on Linux (or MacOS)
@@ -107,7 +103,7 @@
 
 ;; SO LONG
 (if (version<= "27.1" emacs-version)
-    (global-so-long-mode 1))
+  (global-so-long-mode 1))
 
 ;; MOVE CURRENT LINE UP OR DOWN alt-up / atl-down
 (defun move-line-up ()
@@ -131,24 +127,6 @@
 (dolist (hook '(text-mode-hook))
   (add-hook hook (lambda () (flyspell-mode 1))))
 
-;; Open file and specify line nubmer E.G: emacs main.go:12
-(defadvice server-visit-files (before parse-numbers-in-lines (files proc &optional nowait) activate)
-  "Open file with emacsclient with cursors positioned on requested line.
-Most of console-based utilities prints filename in format
-'filename:linenumber'.  So you may wish to open filename in that format.
-Just call:
-  emacsclient filename:linenumber
-and file 'filename' will be opened and cursor set on line 'linenumber'"
-  (ad-set-arg 0
-              (mapcar (lambda (fn)
-                        (let ((name (car fn)))
-                          (if (string-match "^\\(.*?\\):\\([0-9]+\\)\\(?::\\([0-9]+\\)\\)?$" name)
-                              (cons
-                               (match-string 1 name)
-                               (cons (string-to-number (match-string 2 name))
-                                     (string-to-number (or (match-string 3 name) ""))))
-                            fn))) files)))
-
 (use-package exec-path-from-shell
   :ensure t
   :config
@@ -162,17 +140,17 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
 (with-eval-after-load "comment-tags"
   (setq comment-tags-keyword-faces
        `(;; A concrete TODO with actionable steps
-          ("TODO" . ,(list :weight 'bold :foreground "#2ecc71"))
-          ("FIXME" . ,(list :weight 'bold :foreground "#ff7979"))
-          ("HACK" . ,(list :weight 'bold :foreground "#f1c40f"))
-          ("BUG" . ,(list :weight 'bold :foreground "#e84118"))
-          ("NOTE" . ,(list :weight 'bold :foreground "#dff9fb"))
-          ("INFO" . ,(list :weight 'bold :foreground "#bdc3c7"))))
+        ("TODO" . ,(list :weight 'bold :foreground "#2ecc71"))
+        ("FIXME" . ,(list :weight 'bold :foreground "#ff7979"))
+        ("HACK" . ,(list :weight 'bold :foreground "#f1c40f"))
+        ("BUG" . ,(list :weight 'bold :foreground "#e84118"))
+        ("NOTE" . ,(list :weight 'bold :foreground "#dff9fb"))
+        ("INFO" . ,(list :weight 'bold :foreground "#bdc3c7"))))
   (setq comment-tags-comment-start-only t
-        comment-tags-require-colon t
-        comment-tags-case-sensitive t
-        comment-tags-show-faces t
-        comment-tags-lighter nil))
+    comment-tags-require-colon t
+    comment-tags-case-sensitive t
+    comment-tags-show-faces t
+    comment-tags-lighter nil))
 (add-hook 'prog-mode-hook 'comment-tags-mode)
 (add-hook 'conf-mode-hook 'comment-tags-mode)
 
@@ -184,7 +162,7 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
 (use-package expand-region
   :ensure t
   :bind (("C-=" . er/expand-region)
-	 ("C--" . er/contract-region)))
+    ("C--" . er/contract-region)))
 
 ;; JSON-MODE CONFIGURATION
 (use-package json-mode
@@ -197,15 +175,15 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
 (use-package web-mode
   :ensure t
   :mode (("\\.js\\'" . web-mode)
-	 ("\\.jsx\\'" .  web-mode)
-	 ("\\.ts\\'" . web-mode)
-	 ("\\.tsx\\'" . web-mode)
-	 ("\\.html\\'" . web-mode))
+    ("\\.jsx\\'" .  web-mode)
+    ("\\.ts\\'" . web-mode)
+    ("\\.tsx\\'" . web-mode)
+    ("\\.html\\'" . web-mode))
   :commands web-mode)
 
 ;; COMPANY CONFIGURATION
 (setq company-minimum-prefix-length 1
-      company-idle-delay 0.0)
+  company-idle-delay 0.0)
 (use-package company
   :ensure t
   :config (global-company-mode t))
@@ -214,17 +192,29 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
 (use-package magit
   :ensure t
   :bind (
-		 ("C-x g" . magit-status)
-		 ("C-x d" . magit-diff-buffer-file)
-		 ))
+   ("C-x g" . magit-status)
+   ("C-x d" . magit-diff-buffer-file)
+   ))
 
-;; LSP-MODE CONFIGURATION
-(setq lsp-log-io nil) ;; Don't log everything = speed
-(setq lsp-keymap-prefix "C-c l")
-(setq lsp-restart 'auto-restart)
-(setq lsp-ui-sideline-show-diagnostics t)
-(setq lsp-ui-sideline-show-hover t)
-(setq lsp-ui-sideline-show-code-actions t)
+;; Clang stuff
+(require 'clang-format)
+(setq clang-format-style "Mozilla")
+(add-hook 'c++-mode-hook
+  (lambda ()
+    (add-hook (make-local-variable 'before-save-hook)
+      'clang-format-buffer)))
+
+
+;; CMAKE Mode
+(setq auto-mode-alist
+  (append
+   '(("CMakeLists\\.txt\\'" . cmake-mode))
+   '(("\\.cmake\\'" . cmake-mode))
+   auto-mode-alist))
+
+(defun company-cmake-setup ()
+  (add-to-list 'company-backends 'company-cmake))
+(add-hook 'cmake-mode-hook 'company-cmake-setup)
 
 (helm-mode)
 (require 'helm-xref)
@@ -237,51 +227,56 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
 (add-hook 'c++-mode-hook 'lsp)
 
 (setq gc-cons-threshold (* 100 1024 1024)
-      read-process-output-max (* 1024 1024)
-      treemacs-space-between-root-nodes nil
-      company-idle-delay 0.0
-      company-minimum-prefix-length 1
-      lsp-idle-delay 0.1)  ;; clangd is fast
+  read-process-output-max (* 1024 1024)
+  treemacs-space-between-root-nodes nil
+  company-idle-delay 0.0
+  company-minimum-prefix-length 1
+      lsp-idle-delay 0.0)  ;; clangd is fast
 
 (with-eval-after-load 'lsp-mode
   (add-hook 'lsp-mode-hook #'lsp-enable-which-key-integration)
   (require 'dap-cpptools)
-  (yas-global-mode))
+  )
 
-;; LSP MODE CONFIGURATION
-;;(use-package lsp-mode
-;;  :ensure t
-;;  :hook (
-;;	 (web-mode . lsp-deferred)
-;;	 (lsp-mode . lsp-enable-semantic-highlighting))
-;;  :commands lsp-deferred)
+;; LSP-MODE CONFIGURATION
+(setq lsp-log-io nil) ;; Don't log everything = speed
+(setq lsp-keymap-prefix "C-c l")
+(setq lsp-restart 'auto-restart)
+(setq lsp-ui-sideline-show-diagnostics t)
+(setq lsp-ui-sideline-show-hover t)
+(setq lsp-ui-sideline-show-code-actions t)
 
-;; LSP UI CONFIGURATION
+;; LSP UI
 (use-package lsp-ui
   :ensure t
   :commands lsp-ui-mode)
 
+
 (defun enable-minor-mode (my-pair)
   "Enable minor mode if filename match the regexp.  MY-PAIR is a cons cell (regexp . minor-mode)."
   (if (buffer-file-name)
-      (if (string-match (car my-pair) buffer-file-name)
-	  (funcall (cdr my-pair)))))
+    (if (string-match (car my-pair) buffer-file-name)
+     (funcall (cdr my-pair)))))
 
 ;; EDITOR ZOOM
 ;; C-0/C-1
 (defun zoom-in ()
   (interactive)
   (let ((x (+ (face-attribute 'default :height)
-              10)))
-    (set-face-attribute 'default nil :height x)))
+    10)))
+  (set-face-attribute 'default nil :height x)))
 (defun zoom-out ()
   (interactive)
   (let ((x (- (face-attribute 'default :height)
-              10)))
-    (set-face-attribute 'default nil :height x)))
+    10)))
+  (set-face-attribute 'default nil :height x)))
 
 (define-key global-map (kbd "C-1") 'zoom-in)
 (define-key global-map (kbd "C-0") 'zoom-out)
+
+
+(defun turn-off-eldoc () (eldoc-mode -1))
+(add-hook 'eval-expression-minibuffer-setup-hook #'turn-off-eldoc)
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -302,51 +297,51 @@ and file 'filename' will be opened and cursor set on line 'linenumber'"
  '(global-display-line-numbers-mode t)
  '(hl-todo-keyword-faces
    '(("TODO" . "#dc752f")
-	 ("NEXT" . "#dc752f")
-	 ("THEM" . "#2d9574")
-	 ("PROG" . "#4f97d7")
-	 ("OKAY" . "#4f97d7")
-	 ("DONT" . "#f2241f")
-	 ("FAIL" . "#f2241f")
-	 ("DONE" . "#86dc2f")
-	 ("NOTE" . "#b1951d")
-	 ("KLUDGE" . "#b1951d")
-	 ("HACK" . "#b1951d")
-	 ("TEMP" . "#b1951d")
-	 ("FIXME" . "#dc752f")
-	 ("XXX+" . "#dc752f")
-	 ("\\?\\?\\?+" . "#dc752f")))
+    ("NEXT" . "#dc752f")
+    ("THEM" . "#2d9574")
+    ("PROG" . "#4f97d7")
+    ("OKAY" . "#4f97d7")
+    ("DONT" . "#f2241f")
+    ("FAIL" . "#f2241f")
+    ("DONE" . "#86dc2f")
+    ("NOTE" . "#b1951d")
+    ("KLUDGE" . "#b1951d")
+    ("HACK" . "#b1951d")
+    ("TEMP" . "#b1951d")
+    ("FIXME" . "#dc752f")
+    ("XXX+" . "#dc752f")
+    ("\\?\\?\\?+" . "#dc752f")))
  '(inhibit-startup-screen t)
  '(org-fontify-done-headline nil)
  '(org-fontify-todo-headline nil)
  '(package-archives
    '(("org" . "https://orgmode.org/elpa/")
-	 ("melpa" . "https://melpa.org/packages/")
-	 ("gnu" . "https://elpa.gnu.org/packages/")))
+    ("melpa" . "https://melpa.org/packages/")
+    ("gnu" . "https://elpa.gnu.org/packages/")))
  '(package-selected-packages
-   '(rainbow-mode all-the-icons lsp-ui lsp-mode sokoban git-gutter+ diff-hl fzf gruvbox-theme web-mode-edit-element typescript-mode direx spacemacs-theme color-theme-sanityinc-tomorrow neotree evil))
+   '(dap-mode helm-flyspell flyspell-popup cmake-mode flycheck-rtags clang-format rust-mode rainbow-mode all-the-icons lsp-ui lsp-mode sokoban git-gutter+ diff-hl fzf gruvbox-theme web-mode-edit-element typescript-mode direx spacemacs-theme color-theme-sanityinc-tomorrow neotree evil))
  '(pdf-view-midnight-colors '("#fdf4c1" . "#1d2021"))
  '(show-paren-mode t)
  '(vc-annotate-background nil)
  '(vc-annotate-color-map
    '((20 . "#f2777a")
-	 (40 . "#f99157")
-	 (60 . "#ffcc66")
-	 (80 . "#99cc99")
-	 (100 . "#66cccc")
-	 (120 . "#6699cc")
-	 (140 . "#cc99cc")
-	 (160 . "#f2777a")
-	 (180 . "#f99157")
-	 (200 . "#ffcc66")
-	 (220 . "#99cc99")
-	 (240 . "#66cccc")
-	 (260 . "#6699cc")
-	 (280 . "#cc99cc")
-	 (300 . "#f2777a")
-	 (320 . "#f99157")
-	 (340 . "#ffcc66")
-	 (360 . "#99cc99")))
+    (40 . "#f99157")
+    (60 . "#ffcc66")
+    (80 . "#99cc99")
+    (100 . "#66cccc")
+    (120 . "#6699cc")
+    (140 . "#cc99cc")
+    (160 . "#f2777a")
+    (180 . "#f99157")
+    (200 . "#ffcc66")
+    (220 . "#99cc99")
+    (240 . "#66cccc")
+    (260 . "#6699cc")
+    (280 . "#cc99cc")
+    (300 . "#f2777a")
+    (320 . "#f99157")
+    (340 . "#ffcc66")
+    (360 . "#99cc99")))
  '(vc-annotate-very-old-color nil)
  '(window-divider-mode nil))
 (custom-set-faces
